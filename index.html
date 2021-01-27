@@ -1,0 +1,44 @@
+<script src="/assets/js/jquery.js"></script>
+
+<form>
+  <input type="text" />
+  <input type="text" />
+  <input type="text" />
+  <input type="text" />
+
+  <select name="" id="">
+    <option value="as">aa</option>
+    <option value=""></option>
+    <option value=""></option>
+    <option value=""></option>
+  </select>
+  <select name="" id="">
+    <option value="rrr">asas</option>
+    <option value=""></option>
+    <option value=""></option>
+    <option value=""></option>
+  </select>
+
+  <input type="radio" name="algo" value="1" />
+  <input type="radio" name="algo" value="2" />
+  <input type="radio" name="algo" value="3" />
+  <button>enviar</button>
+</form>
+
+<script>
+  $("form").submit((e) => {
+    e.preventDefault();
+
+    let elementos = Array.from(e.target).map((i) =>
+      i.type == "text" || i.type == "number" || i.type == "select-one"
+        ? i.value
+        : i.type == "file"
+        ? i.files
+        : i.type == "radio" && i.checked
+        ? i.value
+        : false
+    );
+    elementos = elementos.filter((i) => i);
+    console.log(elementos);
+  });
+</script>
