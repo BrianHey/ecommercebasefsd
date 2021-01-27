@@ -107,9 +107,9 @@
       Forma 2
       */
 
-        let elementos = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one"? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
-        elementos = elementos.filter( i => i)
-        console.log(elementos)
+        let elementos = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
+        elementos = elementos.filter(i => i)
+        if (elementos.length < 9) alert("Te falta poner algo mi bro")
     })
 
 </script>
