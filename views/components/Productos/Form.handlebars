@@ -42,7 +42,7 @@
 
     <div class="form-group">
         <label for="exampleInputEmail1">Talla</label>
-        <select>
+        <select class="form-control">
 
             <option value="S">S</option>
             <option value="M">M</option>
@@ -75,6 +75,31 @@
 
     </div>
 
+    <div class="form-group w-50">
+        <label for="exampleInputEmail1">Temporada</label>
+        <div class="d-flex justify-content-around">
+            <div>
+                <span>Invierno</span>
+                <input class="form-control" value="Invierno" type="radio" name="temporada">
+            </div>
+
+            <div>
+                <span>Primavera</span>
+                <input class="form-control" value="Primavera" type="radio" name="temporada">
+            </div>
+            <div>
+                <span>Verano</span>
+                <input class="form-control" value="Verano" type="radio" name="temporada">
+            </div>
+
+            <div>
+                <span>Otoño</span>
+                <input class="form-control" value="Otoño" type="radio" name="temporada">
+            </div>
+        </div>
+
+    </div>
+
     <div class="form-group">
         <label for="exampleInputEmail1">Color</label>
         <select class="form-control">
@@ -95,6 +120,11 @@
 
 <script>
 
+$(document).ready(()=> {
+    console.log($("input[type='radio']"))
+})
+
+
     $("form").submit((e) => {
         e.preventDefault()
         /*  
@@ -108,8 +138,19 @@
       */
 
         let elementos = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
+        console.log(e)
+        console.log(elementos)
+
+        // Pedro => longitud = elementos.length - elementos.filter(i => i).length
+
+
+        let longitud_Inicial = elementos.length
+
         elementos = elementos.filter(i => i)
-        if (elementos.length < 9) alert("Te falta poner algo mi bro")
+        let longitud_Final = elementos.length
+
+        if (longitud_Final < longitud_Inicial) alert("Te falta poner algo mi bro")
+        else if (isNaN(elementos[1]) || isNaN(elementos[2])) alert("El stock y el precio deben ser solo números")
     })
 
 </script>
