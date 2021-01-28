@@ -4,6 +4,8 @@ const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 
+const { getCategories } = require("./consultas.js");
+
 app.listen(3000);
 
 app.use("/css", express.static(__dirname + "/assets/css"));
@@ -21,4 +23,9 @@ app.engine(
 
 app.get("/admin/productos", (req, res) => {
   res.render("Productos");
+});
+
+app.get("/categories", async (req, res) => {
+  const categories = await getCategories();
+  res.send(categories);
 });
