@@ -26,6 +26,9 @@
         <select class="form-control" id="categories">
             <option selected disabled>
                 <--- Seleccione la categoría --->
+                {{#each categories}}
+                    <option value={{this.name}}>{{this.name}}</option>
+                {{/each}}
             </option>
 
 
@@ -42,6 +45,10 @@
         <select class="form-control" id="sizes">
             <option selected disabled>
                 <--- Seleccione la categoría --->
+                <--- Seleccione la categoría --->
+                {{#each sizes}}
+                    <option value={{this}}>{{this}}</option>
+                {{/each}}
             </option>
 
 
@@ -52,7 +59,11 @@
     <div class="form-group w-50">
         <label for="exampleInputEmail1">Genero</label>
         <div class="d-flex justify-content-around" id="genders" >
-
+            {{#each genders}}
+                <span>{{this}}</span>
+                <input class="form-control" value={{this}} type="radio" name="genders">
+                
+            {{/each}}
         </div>
 
     </div>
@@ -62,6 +73,9 @@
         <select class="form-control" id="colors">
             <option selected disabled>
                 <--- Seleccione la color --->
+                {{#each colors}}
+                    <option value={{this}}>{{this}}</option>
+                {{/each}}
             </option>
 
         </select>
@@ -70,5 +84,4 @@
     <button type="submit" class="btn btn-primary">Agregar</button>
     <button type="submit" class="btn btn-warning" onclick="updateProduct()">Actualizar</button>
 </form>
-
 

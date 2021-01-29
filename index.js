@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars");
 const Handlebars = require("handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
+const optionsForm = require('./optionsForm')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -47,18 +48,22 @@ Handlebars.registerHelper("formatDate", (fecha) => {
 });
 
 app.get("/admin/productos", async (req, res) => {
-  const productos = await getProducts();
+  const promiseOptions = await Promise.all([getProducts(), getCategories()])
+  const [productos,categories] = promiseOptions
+  const {sizes, colors, genders} = optionsForm  
   res.render("Productos", {
-    products: JSON.stringify(productos),
     productos,
-    // productos: encodeURIComponent(JSON.stringify(productos)),
+    sizes,
+    colors,
+    genders,
+    categories
   });
 });
 
-app.get("/categories", async (req, res) => {
-  const categories = await getCategories();
-  res.send(categories);
-});
+// app.get("/categories", async (req, res) => {
+//   const categories = await getCategories();
+//   res.send(categories);
+// });
 
 app.post("/productos", async (req, res) => {
   let productos = req.body;
