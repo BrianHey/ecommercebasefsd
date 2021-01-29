@@ -1,45 +1,131 @@
 <form>
     <div class="form-group">
-        <label for="exampleInputEmail1">Nombre</label>
-        <input maxlength="30" required class="form-control" placeholder="Ingrese el nombre del producto">
+        <label for="exampleInputEmail1">Modelo</label>
+        <input maxlength="30" class="form-control" placeholder="Ingrese el Modelo del producto">
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Stock</label>
-        <input required class="form-control" type="number" placeholder="Ingrese cantidad">
+        <input class="form-control" type="number" placeholder="Ingrese cantidad">
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">Precio</label>
-        <input required class="form-control" type="number" placeholder="Ingrese el precio del producto">
+        <input class="form-control" type="number" placeholder="Ingrese el precio del producto">
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">Imagen</label>
-        <input required class="form-control" type="file" placeholder="Ingrese imagen del producto">
+        <input class="form-control" type="file" placeholder="Ingrese imagen del producto">
+        <small id="passwordHelpInline" class="text-muted">
+            Peso máximo: 5MB
+        </small>
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">Categoría</label>
-        <select required class="form-control">
+        <select class="form-control" id="categories">
             <option selected disabled>
                 <--- Seleccione la categoría --->
+                {{#each categories}}
+                    <option value={{this.name}}>{{this.name}}</option>
+                {{/each}}
             </option>
-            <option value="Poleras">Poleras</option>
-            <option value="Pantalones">Pantalones</option>
-            <option value="Sombreros">Sombreros</option>
-            <option value="Zapatos">Zapatos</option>
-            <option value="Polerones">Polerones</option>
-            <option value="Blusas">Blusas</option>
-            <option value="Shorts">Shorts</option>
-            <option value="Camisa">Camisa</option>
+
+
         </select>
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">Descripción</label>
-        <input required class="form-control" placeholder="Ingrese el descripción del producto">
+        <input class="form-control" placeholder="Ingrese el descripción del producto">
     </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">Talla</label>
+        <select class="form-control" id="sizes">
+            <option selected disabled>
+                <--- Seleccione la categoría --->
+                <--- Seleccione la categoría --->
+                {{#each sizes}}
+                    <option value={{this}}>{{this}}</option>
+                {{/each}}
+            </option>
+
+
+        </select>
+
+    </div>
+
+    <div class="form-group w-50">
+        <label for="exampleInputEmail1">Genero</label>
+        <div class="d-flex justify-content-around" id="genders" >
+            {{#each genders}}
+                <span>{{this}}</span>
+                <input class="form-control" value={{this}} type="radio" name="genders">
+                
+            {{/each}}
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">Color</label>
+        <select class="form-control" id="colors">
+            <option selected disabled>
+                <--- Seleccione la color --->
+                {{#each colors}}
+                    <option value={{this}}>{{this}}</option>
+                {{/each}}
+            </option>
+
+        </select>
+    </div>
+
     <button type="submit" class="btn btn-primary">Agregar</button>
 </form>
 
+
+<script>
+/*
+    const camposLengt = $("label").length
+    const sizes = ["S", "M", "L", "XL", "XXL"]
+    const colors = ["Azul", "Rojo", "Amarillo", "Morado", "Negro", "Blanco"]
+    const genders = ["Hombre","Mujer","Unisex"]
+
+    const sizesSelect = document.getElementById("sizes")
+    sizes.forEach(s => sizesSelect.innerHTML += `<option value="${s}">${s}</option>`)
+
+    const colorSelect = document.getElementById("colors")
+    colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`)
+
+    const genderSelect = document.getElementById("genders")
+    genders.forEach(g => genderSelect.innerHTML += ` <div>  <span>${g}</span> <input class="form-control" value="${g}" type="radio" name="genero"> </div>`)
+
+
+
+    let categories;
+    $(document).ready(async () => {
+        categories = (await axios.get("http://localhost:3000/categories")).data.map(c => c.name)
+        let categoriesSelect = document.getElementById("categories")
+        categories.forEach(c => {
+            categoriesSelect.innerHTML += `<option value="${c}">${c}</option>`
+        })
+    })
+
+
+    $("form").submit((e) => {
+        e.preventDefault()
+        let elements = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
+        elements = elements.filter(i => i)
+        let length_Final = elements.length
+        const [model, stock, price, image, category, description, size, gender, color] = elements
+        if (length_Final < camposLengt) alert("Te falta poner algo mi bro")
+        else if (stock < 0 || price < 0) alert("El stock y el precio deben ser solo números positivos")
+        else if (image[0].size > 5000000 || image[0].type.split("/")[0] !== "image") alert("El archivo debe ser una imagen de máximo 5MB")
+        else if (!categories.includes(category) || !sizes.includes(size) || !colors.includes(color) || !genders.includes(gender) ) alert("Alerta de hack")
+        
+        console.log("...")
+    })
+*/
+</script>
 

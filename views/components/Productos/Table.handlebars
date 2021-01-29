@@ -1,0 +1,62 @@
+<h1 class="text-center">Tabla de Productos</h1>
+<hr>
+<table class="table ">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Talla</th>
+            <th scope="col">Genero</th>
+            <th scope="col">Color</th>
+            <th scope="col">Fecha de creación</th>
+            <th scope="col"></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each productos}}
+        <tr>
+            <th scope="row">{{this.id}}</th>
+            <td>{{this.model}}</td>
+            <td>{{this.stock}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.image}}</td>
+            <td>{{this.category}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.size}}</td>
+            <td>{{this.gender}}</td>
+            <td>{{this.color}}</td>
+            <td>
+                {{formatDate this.created}}
+            </td>
+
+            <td>
+                <button class="btn btn-warning" onclick="editProduct({{this.id}})">Editar</button> <button
+                    class="btn btn-danger" onclick="deleteProduct({{this.id}})">Eliminar</button>
+                <button onclick="sendProduct({{this}})">wewew</button>
+            </td>
+        </tr>
+
+        {{/each}}
+    </tbody>
+</table>
+
+
+<script>
+
+    const productos = JSON.parse(`{{{products}}}`)
+
+
+
+    /* Magia Oscura
+    var decodedJson = decodeURIComponent("{{{productos}}}");
+    var jsonObj = JSON.parse(decodedJson);
+    console.log(jsonObj)
+    */
+
+</script>
