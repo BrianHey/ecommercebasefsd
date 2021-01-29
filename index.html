@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" />
+
+    <button onclick="sendFile()">enviar</button>
+
+    <script>
+      function sendFile() {
+        file = document.getElementsByTagName("input")[0].files[0];
+        const data = new FormData().append("target", file);
+        console.log(file);
+
+        fetch("http://localhost:3000/files", {
+          method: "POST",
+          body: data,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    </script>
+  </body>
+</html>
