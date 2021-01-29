@@ -20,7 +20,16 @@ const addProduct = async (values) => {
     values
   );
   console.log(result.rows[0]);
-  return result.rowCount;
+  return result.rows;
+};
+
+const updateProduct = async (values) => {
+  const result = await pool.query(
+    "UPDATE productos SET stock = $1, price = $2, image = $3, category =$4, description =$5, size =$6, gender =$7, color =$8, model =$9 WHERE id = $10 RETURNING *",
+    values
+  );
+  console.log(result.rows[0]);
+  return result.rows;
 };
 
 const getProducts = async () => {
@@ -28,4 +37,4 @@ const getProducts = async () => {
   return result.rows;
 };
 
-module.exports = { getCategories, addProduct, getProducts };
+module.exports = { getCategories, addProduct, getProducts, updateProduct };

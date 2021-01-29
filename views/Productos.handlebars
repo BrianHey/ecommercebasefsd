@@ -10,11 +10,22 @@
 
 <script>
 
-    const camposLengt = $("label").length
+    let productId;
+
+
+
     const sizes = ["S", "M", "L", "XL", "XXL"]
+    const colors = ["Azul", "Rojo", "Amarillo", "Morado", "Negro", "Blanco"]
+    const genders = ["Hombre", "Mujer", "Unisex"]
 
     const sizesSelect = document.getElementById("sizes")
     sizes.forEach(s => sizesSelect.innerHTML += `<option value="${s}">${s}</option>`)
+
+    const colorSelect = document.getElementById("colors")
+    colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`)
+
+    const genderSelect = document.getElementById("genders")
+    genders.forEach(g => genderSelect.innerHTML += ` <div>  <span>${g}</span> <input class="form-control" value="${g}" type="radio" name="genero"> </div>`)
 
     let categories;
     let categoriesNames;
@@ -28,36 +39,35 @@
     })
 
 
-    $("form").submit(async (e) => {
+    $("form").submit((e) => {
         e.preventDefault()
-
-        /*
-                const file = $("input[type='file']")[0].files[0]
-        
-                const data =  new FormData()
-                data.append('target', file)
-                
-                try {
-                    axios.post("http://localhost:3000/file", data)
-                } catch (e) {
-                    console.log(e)
-                }
-        */
+        const parent = e.target.parentElement
+        const method = parent.className == "modal-body" ? "put" : "post"
+        validationCreateOrUpdate(e.target, method)
+    })
 
 
-        let elements = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
+
+
+    const validationCreateOrUpdate = async (form, method) => {
+
+
+        const camposLengt = form.getElementsByTagName("label").length
+        let elements = Array.from(form).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
         elements = elements.filter(i => i)
         let length_Final = elements.length
         let [model, stock, price, image, category, description, size, gender, color] = elements
 
         image = image[0]
-        console.log(image)
 
         let validate = true
+        console.log(length_Final)
+
+        console.log(camposLengt)
         length_Final < camposLengt ? (alert("Te falta poner algo mi bro"), validate = false)
             : stock < 0 || price < 0 ? (alert("El stock y el precio deben ser solo números positivos"), validate = false)
                 : image.size > 5000000 || image.type.split("/")[0] !== "image" ? (alert("El archivo debe ser una imagen de máximo 5MB"), validate = false)
-                    : !categoriesNames.includes(category) || !sizes.includes(size) ? (alert("Alerta de hack"), validate = false) : false
+                    : !categoriesNames.includes(category) || !sizes.includes(size) || !colors.includes(color) || !genders.includes(gender) ? (alert("Alerta de hack"), validate = false) : false
 
         category = categories.find(c => c.name == category).id
 
@@ -67,19 +77,16 @@
 
 
             const urlImage = (await axios.post("/files", formDataImage)).data
-            await axios.post("/productos",
+           console.log(`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}` )
+
+            await axios[method](`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}`,
 
                 [stock, price, urlImage, category, description, size, gender, color, model]
             )
+
+            productId = null
         }
-
-        else {
-
-        }
-
-    })
-
-
+    }
     /*
         var formData = new FormData();
         var imagefile = document.querySelector('#file');
@@ -90,5 +97,9 @@
             }
         })
     */
-</script>
 
+
+    const updateProduct = () => {
+
+    }
+</script>

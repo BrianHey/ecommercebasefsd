@@ -16,7 +16,12 @@ app.use(
   })
 );
 
-const { getCategories, addProduct, getProducts } = require("./consultas.js");
+const {
+  getCategories,
+  addProduct,
+  getProducts,
+  updateProduct,
+} = require("./consultas.js");
 
 app.listen(3000);
 
@@ -62,13 +67,25 @@ app.get("/admin/productos", async (req, res) => {
 
 app.post("/productos", async (req, res) => {
   let productos = req.body;
-  console.log(req.body);
-  console.log(req.files);
+
   try {
-    console.log(productos.image);
     productos = Object.values(productos);
     const result = await addProduct(productos);
-    res.status(201).send();
+    res.status(201).send(result);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: "500 Internal Error", message: e.message });
+  }
+});
+
+app.put("/productos/:id", async (req, res) => {
+  const { id } = req.params;
+  let productos = req.body;
+  productos.id = id;
+  try {
+    productos = Object.values(productos);
+    const result = await updateProduct(productos);
+    res.status(201).send(result);
   } catch (e) {
     console.log(e);
     res.status(500).send({ error: "500 Internal Error", message: e.message });
@@ -76,7 +93,6 @@ app.post("/productos", async (req, res) => {
 });
 
 app.post("/files", (req, res) => {
-  console.log(req.files);
   const { image } = req.files;
   const path = `assets/images/${image.name}`;
   image.mv(path, (err) => {
