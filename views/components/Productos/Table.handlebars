@@ -51,6 +51,15 @@
 
     const productos = JSON.parse(`{{{products}}}`)
 
+    const editProduct = (id) => {
+        productId = id
+        $("#exampleModal").modal("show")
+
+        const form = $(".modal-body form")
+        validation(form)
+
+
+    }
 
 
     /* Magia Oscura

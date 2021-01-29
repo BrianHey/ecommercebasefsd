@@ -1,0 +1,11 @@
+form .btn-warning{
+    display: none;
+}
+
+.modal-body .btn-warning{
+    display: block;
+}
+
+.modal-body .btn-primary{
+    display: none;
+}

@@ -68,50 +68,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Agregar</button>
+    <button type="submit" class="btn btn-warning" onclick="updateProduct()">Actualizar</button>
 </form>
 
-
-<script>
-
-    const camposLengt = $("label").length
-    const sizes = ["S", "M", "L", "XL", "XXL"]
-    const colors = ["Azul", "Rojo", "Amarillo", "Morado", "Negro", "Blanco"]
-    const genders = ["Hombre","Mujer","Unisex"]
-
-    const sizesSelect = document.getElementById("sizes")
-    sizes.forEach(s => sizesSelect.innerHTML += `<option value="${s}">${s}</option>`)
-
-    const colorSelect = document.getElementById("colors")
-    colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`)
-
-    const genderSelect = document.getElementById("genders")
-    genders.forEach(g => genderSelect.innerHTML += ` <div>  <span>${g}</span> <input class="form-control" value="${g}" type="radio" name="genero"> </div>`)
-
-
-
-    let categories;
-    $(document).ready(async () => {
-        categories = (await axios.get("http://localhost:3000/categories")).data.map(c => c.name)
-        let categoriesSelect = document.getElementById("categories")
-        categories.forEach(c => {
-            categoriesSelect.innerHTML += `<option value="${c}">${c}</option>`
-        })
-    })
-
-
-    $("form").submit((e) => {
-        e.preventDefault()
-        let elements = Array.from(e.target).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i.value : i.type == "file" ? i.files : i.type == "radio" && i.checked ? i.value : false)
-        elements = elements.filter(i => i)
-        let length_Final = elements.length
-        const [model, stock, price, image, category, description, size, gender, color] = elements
-        if (length_Final < camposLengt) alert("Te falta poner algo mi bro")
-        else if (stock < 0 || price < 0) alert("El stock y el precio deben ser solo números positivos")
-        else if (image[0].size > 5000000 || image[0].type.split("/")[0] !== "image") alert("El archivo debe ser una imagen de máximo 5MB")
-        else if (!categories.includes(category) || !sizes.includes(size) || !colors.includes(color) || !genders.includes(gender) ) alert("Alerta de hack")
-        
-        console.log("...")
-    })
-
-</script>
 
