@@ -4,7 +4,7 @@ const exphbs = require("express-handlebars");
 const Handlebars = require("handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
-const optionsForm = require('./optionsForm')
+const optionsForm = require("./optionsForm");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -48,15 +48,21 @@ Handlebars.registerHelper("formatDate", (fecha) => {
 });
 
 app.get("/admin/productos", async (req, res) => {
-  const promiseOptions = await Promise.all([getProducts(), getCategories()])
-  const [productos,categories] = promiseOptions
-  const {sizes, colors, genders} = optionsForm  
+  const promiseOptions = await Promise.all([getProducts(), getCategories()]);
+  const [productos, categories] = promiseOptions;
+  const { sizes, colors, genders } = optionsForm;
+  console.log(categories);
   res.render("Productos", {
+    products: JSON.stringify(productos),
     productos,
+    sizesData: JSON.stringify(sizes),
     sizes,
+    colorsData: JSON.stringify(colors),
     colors,
+    gendersData: JSON.stringify(genders),
     genders,
-    categories
+    categoriesData: JSON.stringify(categories),
+    categories,
   });
 });
 

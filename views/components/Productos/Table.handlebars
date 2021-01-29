@@ -38,7 +38,6 @@
             <td>
                 <button class="btn btn-warning" onclick="editProduct({{this.id}})">Editar</button> <button
                     class="btn btn-danger" onclick="deleteProduct({{this.id}})">Eliminar</button>
-                <button onclick="sendProduct({{this}})">wewew</button>
             </td>
         </tr>
 
@@ -54,11 +53,6 @@
     const editProduct = (id) => {
         productId = id
         $("#exampleModal").modal("show")
-
-        const form = $(".modal-body form")
-        validation(form)
-
-
     }
 
 

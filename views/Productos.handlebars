@@ -12,31 +12,14 @@
 
     let productId;
 
+    let sizes = JSON.parse('{{{sizesData}}}');
+    let categories = JSON.parse('{{{categoriesData}}}');
+    let colors = JSON.parse('{{{colorsData}}}');
+    let genders = JSON.parse('{{{gendersData}}}');
 
-
-    const sizes = ["S", "M", "L", "XL", "XXL"]
-    const colors = ["Azul", "Rojo", "Amarillo", "Morado", "Negro", "Blanco"]
-    const genders = ["Hombre", "Mujer", "Unisex"]
-
-    const sizesSelect = document.getElementById("sizes")
-    sizes.forEach(s => sizesSelect.innerHTML += `<option value="${s}">${s}</option>`)
-
-    const colorSelect = document.getElementById("colors")
-    colors.forEach(c => colorSelect.innerHTML += `<option value="${c}">${c}</option>`)
-
-    const genderSelect = document.getElementById("genders")
-    genders.forEach(g => genderSelect.innerHTML += ` <div>  <span>${g}</span> <input class="form-control" value="${g}" type="radio" name="genero"> </div>`)
-
-    let categories;
     let categoriesNames;
-    $(document).ready(async () => {
-        categories = (await axios.get("http://localhost:3000/categories")).data
-        categoriesNames = categories.map(c => c.name)
-        let categoriesSelect = document.getElementById("categories")
-        categoriesNames.forEach(c => {
-            categoriesSelect.innerHTML += `<option value="${c}">${c}</option>`
-        })
-    })
+    categoriesNames = categories.map(c => c.name)
+
 
 
     $("form").submit((e) => {
@@ -77,7 +60,7 @@
 
 
             const urlImage = (await axios.post("/files", formDataImage)).data
-           console.log(`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}` )
+            console.log(`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}`)
 
             await axios[method](`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}`,
 
@@ -86,6 +69,8 @@
 
             productId = null
         }
+
+        $("#exampleModal").modal("hide")
     }
     /*
         var formData = new FormData();
