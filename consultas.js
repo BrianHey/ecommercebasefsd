@@ -23,4 +23,9 @@ const addProduct = async (values) => {
   return result.rowCount;
 };
 
-module.exports = { getCategories, addProduct };
+const getProducts = async () => {
+  const result = await pool.query("SELECT * FROM productos");
+  return result.rows;
+};
+
+module.exports = { getCategories, addProduct, getProducts };

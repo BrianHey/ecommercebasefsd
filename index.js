@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const router = express.Router();
 const exphbs = require("express-handlebars");
+const Handlebars = require("handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -11,10 +11,11 @@ app.use(
     limits: { fileSize: 5000000 },
     abortOnLimit: true,
     responseOnLimit: "Supero el límte",
+    helpers: {},
   })
 );
 
-const { getCategories, addProduct } = require("./consultas.js");
+const { getCategories, addProduct, getProducts } = require("./consultas.js");
 
 app.listen(3000);
 
@@ -31,8 +32,22 @@ app.engine(
   })
 );
 
-app.get("/admin/productos", (req, res) => {
-  res.render("Productos");
+Handlebars.registerHelper("formatDate", (fecha) => {
+  let año = fecha.getFullYear();
+  let mes = fecha.getMonth() + 1;
+  let dia = fecha.getDate();
+  let hora = fecha.getHours();
+  let minutos = fecha.getMinutes();
+  return `${dia}/${mes}/${año}`;
+});
+
+app.get("/admin/productos", async (req, res) => {
+  const productos = await getProducts();
+  res.render("Productos", {
+    products: JSON.stringify(productos),
+    productos,
+    // productos: encodeURIComponent(JSON.stringify(productos)),
+  });
 });
 
 app.get("/categories", async (req, res) => {
@@ -62,4 +77,13 @@ app.post("/files", (req, res) => {
   image.mv(path, (err) => {
     err ? res.status(500).send("Something wrong...") : res.send(path);
   });
+});
+
+app.get("/productos", async (req, res) => {
+  try {
+    const respuesta = await getProducts();
+    res.send(respuesta);
+  } catch (err) {
+    res.status(500).send({ message: err.message, error: "Error 500." });
+  }
 });
