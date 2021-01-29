@@ -77,7 +77,9 @@
 
 
             const urlImage = (await axios.post("/files", formDataImage)).data
-            await axios[method]("http://localhost:3000/productos" + method == "put" ? `/${productId}` : '',
+           console.log(`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}` )
+
+            await axios[method](`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}`,
 
                 [stock, price, urlImage, category, description, size, gender, color, model]
             )
