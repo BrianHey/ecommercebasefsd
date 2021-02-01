@@ -81,20 +81,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Agregar</button>
-    <button type="submit" class="btn btn-warning" onclick="updateProduct()">Actualizar</button>
+    <button type="submit" class="btn btn-warning">Actualizar</button>
 </form>
-
-<script>
-
-
-    $('input[type="file"]').change(e => {
-        const file = e.target.files[0]
-        console.log(file)
-        if (file.size > 500000) alert("La imagen debe pesar menos de 5MB")
-        const reader = new FileReader()
-        const preview = e.target.parentElement.getElementsByTagName("img")[0]
-        reader.onloadend = () => preview.setAttribute("src", reader.result)
-        reader.readAsDataURL(file)
-    })
-
-</script>

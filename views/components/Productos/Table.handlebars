@@ -71,6 +71,17 @@
         $("#exampleModal").modal("show")
     }
 
+    const deleteProduct = async (id) => {
+        const decision = confirm("¿Estás seguro de querer eliminar este proucto?")
+        if (decision) {
+            try {
+                const consulta = await axios.delete(`http://localhost:3000/productos/${id}`)
+                alert(consulta.data.message)
+                location.reload()
+            } catch (e) {
+                alert(e.data.message)
+            }
+        }
+    }
 
-  
 </script>

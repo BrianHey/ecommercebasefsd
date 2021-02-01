@@ -37,4 +37,14 @@ const getProducts = async () => {
   return result.rows;
 };
 
-module.exports = { getCategories, addProduct, getProducts, updateProduct };
+const deleteProduct = async (id) => {
+  const result = await pool.query("DELETE FROM productos WHERE id = $1", [id]);
+  return result.rowCount;
+};
+module.exports = {
+  getCategories,
+  addProduct,
+  getProducts,
+  updateProduct,
+  deleteProduct,
+};

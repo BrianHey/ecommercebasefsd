@@ -21,6 +21,7 @@ const {
   addProduct,
   getProducts,
   updateProduct,
+  deleteProduct,
 } = require("./consultas.js");
 
 app.listen(3000);
@@ -118,4 +119,16 @@ app.get("/productos", async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message, error: "Error 500." });
   }
+});
+
+app.delete("/productos/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const respuesta = await deleteProduct(id);
+  respuesta > 0
+    ? res.send({ status: "200", message: "Producto Eliminado" })
+    : res.status(500).send({
+        message: "No existe un registro con el id indicado",
+        error: "Error 500.",
+      });
 });

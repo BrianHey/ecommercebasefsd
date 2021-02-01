@@ -14,7 +14,6 @@
       function sendFile() {
         file = document.getElementsByTagName("input")[0].files[0];
         const data = new FormData().append("target", file);
-        console.log(file);
 
         fetch("http://localhost:3000/files", {
           method: "POST",

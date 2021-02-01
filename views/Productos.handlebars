@@ -71,4 +71,14 @@
     }
 
 
+
+    $('input[type="file"]').change(e => {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+        const preview = e.target.parentElement.getElementsByTagName("img")[0]
+        reader.onloadend = () => preview.setAttribute("src", reader.result)
+        reader.readAsDataURL(file)
+    })
+
+
 </script>
