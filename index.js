@@ -27,6 +27,7 @@ app.listen(3000);
 
 app.use("/css", express.static(__dirname + "/assets/css"));
 app.use("/js", express.static(__dirname + "/assets/js"));
+app.use("/assets", express.static(__dirname + "/assets"));
 
 app.set("view engine", "handlebars");
 app.engine(

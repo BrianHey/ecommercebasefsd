@@ -44,9 +44,7 @@
         image = image[0]
 
         let validate = true
-        console.log(length_Final)
 
-        console.log(camposLengt)
         length_Final < camposLengt ? (alert("Te falta poner algo mi bro"), validate = false)
             : stock < 0 || price < 0 ? (alert("El stock y el precio deben ser solo números positivos"), validate = false)
                 : image.size > 5000000 || image.type.split("/")[0] !== "image" ? (alert("El archivo debe ser una imagen de máximo 5MB"), validate = false)
@@ -69,8 +67,7 @@
 
             productId = null
         }
-
-        $("#exampleModal").modal("hide")
+        location.reload()
     }
 
 

@@ -25,7 +25,7 @@
             <td>{{this.model}}</td>
             <td>{{this.stock}}</td>
             <td>{{this.price}}</td>
-            <td>{{this.image}}</td>
+            <td><img src="/{{this.image}}" width="100" /></td>
             <td>{{this.category}}</td>
             <td>{{this.description}}</td>
             <td>{{this.size}}</td>
@@ -46,6 +46,8 @@
 </table>
 
 
+
+
 <script>
 
     const productos = JSON.parse(`{{{products}}}`)
@@ -53,28 +55,22 @@
     const editProduct = (id) => {
         productId = id
         const producto = productos.find(p => p.id == id)
-
         const form = $(".modal-body form")[0]
         let elements = Array.from(form).map(i => i.type == "text" || i.type == "number" || i.type == "select-one" ? i : i.type == "file" ? i : i.type == "radio" ? i : false)
         elements = elements.filter(i => i)
-
-        console.log(producto)
-        console.log(elements)
-
         elements.forEach(e => {
             const dataTarget = e.attributes["data-target"].value
-
             if (e.type == "text" || e.type == "number") e.value = producto[dataTarget]
-
-            if (e.type == "select-one") console.log(e.parentElement.children)
             if (e.type == "select-one") e.value = producto[dataTarget]
+            if (e.type == "radio" && e.value == producto.gender) e.checked = true
+            if (e.type == "file") {
+                $(".modal-body #preview").attr("src", `/${producto.image}`)
+            }
 
         })
-
-        $(".modal-body  input:first").val(producto.model)
-
-
         $("#exampleModal").modal("show")
     }
 
+
+  
 </script>

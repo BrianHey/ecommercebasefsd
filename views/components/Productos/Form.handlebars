@@ -13,7 +13,8 @@
         <input class="form-control" data-target="price" type="number" placeholder="Ingrese el precio del producto">
     </div>
 
-    <div class="form-group">
+    <div class="form-group d-flex flex-column">
+        <img id="preview" width="150" />
         <label for="exampleInputEmail1">Imagen</label>
         <input class="form-control" data-target="image" type="file" placeholder="Ingrese imagen del producto">
         <small id="passwordHelpInline" class="text-muted">
@@ -82,3 +83,18 @@
     <button type="submit" class="btn btn-primary">Agregar</button>
     <button type="submit" class="btn btn-warning" onclick="updateProduct()">Actualizar</button>
 </form>
+
+<script>
+
+
+    $('input[type="file"]').change(e => {
+        const file = e.target.files[0]
+        console.log(file)
+        if (file.size > 500000) alert("La imagen debe pesar menos de 5MB")
+        const reader = new FileReader()
+        const preview = e.target.parentElement.getElementsByTagName("img")[0]
+        reader.onloadend = () => preview.setAttribute("src", reader.result)
+        reader.readAsDataURL(file)
+    })
+
+</script>
