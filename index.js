@@ -51,7 +51,11 @@ app.get("/admin/productos", async (req, res) => {
   const promiseOptions = await Promise.all([getProducts(), getCategories()]);
   const [productos, categories] = promiseOptions;
   const { sizes, colors, genders } = optionsForm;
-  console.log(categories);
+  console.log(productos);
+  productos.forEach((p) => {
+    p.category = categories.find((c) => c.id == p.category).name;
+  });
+
   res.render("Productos", {
     products: JSON.stringify(productos),
     productos,
