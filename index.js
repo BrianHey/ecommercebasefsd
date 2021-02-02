@@ -49,6 +49,13 @@ Handlebars.registerHelper("formatDate", (fecha) => {
   return `${dia}/${mes}/${año}`;
 });
 
+Handlebars.registerHelper("ifCond", function (v1, v2, options) {
+  console.log(v1, v2);
+  if (v1 === v2) {
+    return options.fn(this);
+  }
+});
+
 app.get("/admin/productos", async (req, res) => {
   const promiseOptions = await Promise.all([getProducts(), getCategories()]);
   const [productos, categories] = promiseOptions;
@@ -71,11 +78,6 @@ app.get("/admin/productos", async (req, res) => {
     categories,
   });
 });
-
-// app.get("/categories", async (req, res) => {
-//   const categories = await getCategories();
-//   res.send(categories);
-// });
 
 app.post("/productos", async (req, res) => {
   let productos = req.body;
@@ -131,4 +133,19 @@ app.delete("/productos/:id", async (req, res) => {
         message: "No existe un registro con el id indicado",
         error: "Error 500.",
       });
+});
+
+app.get("/", async (req, res) => {
+  const { pag } = req.query;
+
+  let productos = await getProducts();
+  const pageQ = Math.ceil(productos.length / 8);
+  const pageQArray = [];
+  for (let i = 0; i <= pageQ; i++) {
+    pageQArray.push(i);
+  }
+  pag
+    ? (productos = productos.slice(pag * 8 - 8, pag * 8))
+    : (productos = productos.slice(0, 8));
+  res.render("Inicio", { productos, pageQArray: pageQArray, pageQ, pag });
 });
