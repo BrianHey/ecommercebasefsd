@@ -140,12 +140,24 @@ app.get("/", async (req, res) => {
 
   let productos = await getProducts();
   const pageQ = Math.ceil(productos.length / 8);
-  const pageQArray = [];
-  for (let i = 0; i <= pageQ; i++) {
-    pageQArray.push(i);
-  }
+
   pag
     ? (productos = productos.slice(pag * 8 - 8, pag * 8))
     : (productos = productos.slice(0, 8));
-  res.render("Inicio", { productos, pageQArray: pageQArray, pageQ, pag });
+  res.render("Inicio", {
+    productos,
+    pageQ,
+    pag,
+  });
+});
+
+app.get("/producto/:id", async (req, res) => {
+  const { id } = req.params;
+  const promiseOptions = await Promise.all([getProducts(), getCategories()]);
+  const [productos, categories] = promiseOptions;
+  productos.forEach((p) => {
+    p.category = categories.find((c) => c.id == p.category).name;
+  });
+  let producto = productos.find((p) => p.id == id);
+  res.render("Details", { producto });
 });

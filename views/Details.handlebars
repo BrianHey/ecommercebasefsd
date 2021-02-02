@@ -1,0 +1,25 @@
+<div class="row p-5">
+
+    <div class="col-6">
+
+        <img src="/{{producto.image}}" class="img-fluid" alt="">
+
+    </div>
+
+    <div class="col-6">
+
+        <p> Modelo: {{producto.model}}</p>
+        <p> Stock: {{producto.stock}}</p>
+        <p> Categoria: {{producto.category}}</p>
+        <p> Descripción: {{producto.description}}</p>
+        <p> Talla: {{producto.size}}</p>
+        <p> Genero: {{producto.gender}}</p>
+        <p> Color: {{producto.color}}</p>
+        <h4> Precio: {{producto.price}}</h4>
+
+    </div>
+</div>
+
+
+<button {{#unless producto.stock }} disabled {{/unless}} type="submit"
+    class="btn btn-primary d-block mx-auto mt-5">Agregar al carrito</button>
