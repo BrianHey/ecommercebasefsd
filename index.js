@@ -161,3 +161,49 @@ app.get("/producto/:id", async (req, res) => {
   let producto = productos.find((p) => p.id == id);
   res.render("Details", { producto });
 });
+
+// app.get("/busqueda/:input", async (req, res) => {
+//   let productos = await getProducts();
+//   const { input } = req.params;
+//   let all_ProductsLabels = productos.map((p) => p.model);
+//   all_ProductsLabels = [...new Set(all_ProductsLabels)];
+//   productos = productos.filter((p) =>
+//     input.toLowerCase().includes(p.model.toLowerCase())
+//   );
+
+//   let filtros = Object.keys(productos[0]);
+
+//   res.render("Busqueda", {
+//     productos,
+//     all_ProductsLabels,
+//     filtros,
+//   });
+// });
+
+app.get("/busqueda/:filtro/:input", async (req, res) => {
+  let productos = await getProducts();
+  let filtros = Object.keys(productos[0]);
+
+  const { filtro, input } = req.params;
+  let all_ProductsLabels = productos.map((p) => p.model);
+  all_ProductsLabels = [...new Set(all_ProductsLabels)];
+
+  if (filtro == "todos") {
+    productos = productos.filter((p) => {
+      let valoresDeBusqueda = Object.values(p).map((v) =>
+        v.toString().toLocaleLowerCase()
+      );
+      return valoresDeBusqueda.includes(input.toLocaleLowerCase());
+    });
+  } else {
+    productos = productos.filter((p) => {
+      return p[filtro].toString().toLowerCase().includes(input.toLowerCase());
+    });
+  }
+
+  res.render("Busqueda", {
+    productos,
+    all_ProductsLabels,
+    filtros,
+  });
+});
