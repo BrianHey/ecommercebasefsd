@@ -5,6 +5,7 @@ const Handlebars = require("handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const optionsForm = require("./optionsForm");
+const { v4: uuidv4 } = require("uuid");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -60,7 +61,6 @@ app.get("/admin/productos", async (req, res) => {
   const promiseOptions = await Promise.all([getProducts(), getCategories()]);
   const [productos, categories] = promiseOptions;
   const { sizes, colors, genders } = optionsForm;
-  console.log(productos);
   productos.forEach((p) => {
     p.category = categories.find((c) => c.id == p.category).name;
   });
@@ -108,7 +108,9 @@ app.put("/productos/:id", async (req, res) => {
 
 app.post("/files", (req, res) => {
   const { image } = req.files;
-  const path = `assets/images/${image.name}`;
+  console.log(image);
+  const format = image.mimetype.split("/")[1];
+  const path = `assets/images/${uuidv4().slice(30)}.${format}`;
   image.mv(path, (err) => {
     err ? res.status(500).send("Something wrong...") : res.send(path);
   });
@@ -159,7 +161,7 @@ app.get("/producto/:id", async (req, res) => {
     p.category = categories.find((c) => c.id == p.category).name;
   });
   let producto = productos.find((p) => p.id == id);
-  res.render("Details", { producto });
+  res.render("Details", { producto, productoData: JSON.stringify(producto) });
 });
 
 // app.get("/busqueda/:input", async (req, res) => {

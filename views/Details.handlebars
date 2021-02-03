@@ -21,5 +21,28 @@
 </div>
 
 
-<button {{#unless producto.stock }} disabled {{/unless}} type="submit"
+<button onclick="addToCart()" {{#unless producto.stock }} disabled {{/unless}} type="submit"
     class="btn btn-primary d-block mx-auto mt-5">Agregar al carrito</button>
+
+<script>
+
+    const producto = JSON.parse('{{{productoData}}}')
+    const addToCart = () => {
+
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || []
+        const exists = carrito.some(p => p.id == producto.id)
+        if (carrito.length > 0 && exists) {
+            carrito = carrito.map(p => {
+                if (p.id == producto.id) {
+                    p.cant++;
+                }
+                return p
+            })
+        } else {
+            producto.cant = 1
+            carrito.push(producto)
+        }
+        localStorage.setItem("carrito", JSON.stringify(carrito))
+
+    }
+</script>
