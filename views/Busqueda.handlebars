@@ -26,7 +26,11 @@
 
         <h1 class="mt-5">Busqueda de productos</h1>
         <hr>
-        <div class="row">
+        <div class="row mx-0">
+            {{#unless productos}}
+            <h6>No se consiguieron resultados en su busqueda</h6>
+            {{/unless}}
+
             {{#each productos}}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-3">
 
@@ -47,6 +51,7 @@
                 </div>
             </div>
             {{/each}}
+
         </div>
     </div>
 </div>

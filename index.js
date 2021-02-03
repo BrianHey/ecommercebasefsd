@@ -202,7 +202,7 @@ app.get("/busqueda/:filtro/:input", async (req, res) => {
   }
 
   res.render("Busqueda", {
-    productos,
+    productos: productos.length >= 1 ? productos : null,
     all_ProductsLabels,
     filtros,
   });
