@@ -35,11 +35,13 @@
             carrito = carrito.map(p => {
                 if (p.id == producto.id) {
                     p.cant++;
+                    p.total = p.cant * p.price
                 }
                 return p
             })
         } else {
             producto.cant = 1
+            producto.total = producto.price
             carrito.push(producto)
         }
         localStorage.setItem("carrito", JSON.stringify(carrito))

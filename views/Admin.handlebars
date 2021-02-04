@@ -1,0 +1,50 @@
+<div class="container py-5">
+    <h1>Ingreso de administrador</h1>
+    <hr>
+    <div id="formLogin">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input value="Pedro" id="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                placeholder="Enter email">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input value="goku" type="password" class="form-control" id="passwordAdmin" placeholder="Password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnLoginAdmin">registrar</button>
+    </div>
+</div>
+
+<script>
+
+
+    $("#btnLoginAdmin").click(async (e) => {
+        const username = $("#username").val()
+        const password = $("#passwordAdmin").val()
+        try {
+
+            const { data } = await axios.post("/admin", {
+                username, password
+            })
+
+            const token = data
+            console.log(token)
+
+            alert("Administrador Logeado con éxito")
+            localStorage.setItem("token", token)
+            window.location = `/admin/productos?token=${token}`
+
+        } catch (e) {
+            alert("ups...")
+            console.log(e)
+        }
+
+
+
+    })
+
+
+
+</script>

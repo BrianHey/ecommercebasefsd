@@ -6,6 +6,22 @@ const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const optionsForm = require("./optionsForm");
 const { v4: uuidv4 } = require("uuid");
+const firebase = require("firebase");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDmLEpV8JvRs90TDwXkqcZuBE0L56HiouQ",
+  authDomain: "clase05-10.firebaseapp.com",
+  databaseURL: "https://clase05-10.firebaseio.com",
+  projectId: "clase05-10",
+  storageBucket: "clase05-10.appspot.com",
+  messagingSenderId: "896690830399",
+  appId: "1:896690830399:web:d16b052ed3db66656acc8a",
+};
+
+firebase.initializeApp(firebaseConfig);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -23,6 +39,7 @@ const {
   getProducts,
   updateProduct,
   deleteProduct,
+  adminLogin,
 } = require("./consultas.js");
 
 app.listen(3000);
@@ -57,25 +74,36 @@ Handlebars.registerHelper("ifCond", function (v1, v2, options) {
   }
 });
 
-app.get("/admin/productos", async (req, res) => {
-  const promiseOptions = await Promise.all([getProducts(), getCategories()]);
-  const [productos, categories] = promiseOptions;
-  const { sizes, colors, genders } = optionsForm;
-  productos.forEach((p) => {
-    p.category = categories.find((c) => c.id == p.category).name;
-  });
+app.get("/admin/productos", (req, res) => {
+  const { token } = req.query;
 
-  res.render("Productos", {
-    products: JSON.stringify(productos),
-    productos,
-    sizesData: JSON.stringify(sizes),
-    sizes,
-    colorsData: JSON.stringify(colors),
-    colors,
-    gendersData: JSON.stringify(genders),
-    genders,
-    categoriesData: JSON.stringify(categories),
-    categories,
+  jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
+    if (!err) {
+      const promiseOptions = await Promise.all([
+        getProducts(),
+        getCategories(),
+      ]);
+      const [productos, categories] = promiseOptions;
+      const { sizes, colors, genders } = optionsForm;
+      productos.forEach((p) => {
+        p.category = categories.find((c) => c.id == p.category).name;
+      });
+
+      res.render("Productos", {
+        products: JSON.stringify(productos),
+        productos,
+        sizesData: JSON.stringify(sizes),
+        sizes,
+        colorsData: JSON.stringify(colors),
+        colors,
+        gendersData: JSON.stringify(genders),
+        genders,
+        categoriesData: JSON.stringify(categories),
+        categories,
+      });
+    } else {
+      res.status(401).redirect("/");
+    }
   });
 });
 
@@ -208,4 +236,91 @@ app.get("/busqueda/:filtro/:input", async (req, res) => {
     all_ProductsLabels,
     filtros,
   });
+});
+
+app.get("/carrito", (req, res) => {
+  res.render("Carrito");
+});
+
+app.get("/registro", (req, res) => {
+  res.render("Registro");
+});
+
+app.post("/registro", (req, res) => {
+  const { email, nombre, password } = req.body;
+
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(async (resultado) => {
+      const uid = resultado.user.uid;
+
+      console.log(uid);
+      await firebase
+        .firestore()
+        .collection("users")
+        .add({ email, nombre, password })
+        .catch((e) => console.log(e));
+      res.send(resultado.user);
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+});
+
+app.get("/login", (req, res) => {
+  res.render("Login");
+});
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(() => {
+      firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", email)
+        .get()
+        .then((snapshot) => {
+          const user = [];
+          snapshot.forEach((doc) => {
+            user.push({ id: doc.id, data: doc.data() });
+          });
+
+          res.send(user[0]);
+        });
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+});
+
+app.post("/admin", async (req, res) => {
+  const { username, password } = req.body;
+
+  console.log(username);
+  console.log(password);
+  try {
+    const resultado = await adminLogin([username, password]);
+    jwt.sign(
+      {
+        data: resultado,
+        exp: Math.floor(Date.now() / 1000) + 60,
+      },
+      process.env.SECRET_KEY,
+      (err, jwt) => {
+        console.log(jwt);
+        res.send(jwt);
+      }
+    );
+  } catch (e) {
+    res.status(500).send({ error: "500 internal error", message: e.message });
+  }
+});
+
+app.get("/admin", (req, res) => {
+  res.render("Admin");
 });

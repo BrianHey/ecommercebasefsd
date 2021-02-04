@@ -41,10 +41,20 @@ const deleteProduct = async (id) => {
   const result = await pool.query("DELETE FROM productos WHERE id = $1", [id]);
   return result.rowCount;
 };
+
+const adminLogin = async (values) => {
+  const result = await pool.query(
+    "SELECT * from admin WHERE username = $1 AND password = $2",
+    values
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   getCategories,
   addProduct,
   getProducts,
   updateProduct,
   deleteProduct,
+  adminLogin,
 };

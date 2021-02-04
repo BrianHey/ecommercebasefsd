@@ -1,0 +1,70 @@
+<div class="container py-5">
+    <form id="formRegister">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input value="ejemplo@ejemplo.com" type="email" class="form-control" id="exampleInputEmail1"
+                aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Nombre</label>
+            <input value="ejemplo@ejemplo" type="text" class="form-control" id="exampleInputEmail1"
+                aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input value="ejemplo@ejemplo" type="password" class="form-control" id="exampleInputPassword1"
+                placeholder="Password">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputPassword1">Confirma la Password</label>
+            <input value="ejemplo@ejemplo" type="password" class="form-control" id="exampleInputPassword1"
+                placeholder="Password">
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary" id="btnRegister">registrar</button>
+    </form>
+</div>
+
+<script>
+
+
+    $("#formRegister").submit((e) => {
+        e.preventDefault()
+
+        const form = e.target
+
+        let elements = Array.from(form).map(i => i.type !== "file" ? i.value : i.files)
+        elements = elements.filter(i => i)
+
+        let length_Final = elements.length
+
+        let [email, nombre, password, passwordConfirm] = elements
+
+        if (password !== passwordConfirm) {
+            alert("Las contraseñas deben ser iguales")
+        } else {
+
+            try {
+
+                axios.post("/registro", {
+                    email, nombre, password,
+                })
+
+                alert("Usuario registrado con éxito")
+                window.location = "/login"
+
+            } catch (e) {
+                alert("ups...")
+                console.log(e)
+            }
+
+        }
+
+    })
+
+
+
+</script>

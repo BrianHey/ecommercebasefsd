@@ -1,0 +1,59 @@
+<div class="container py-5">
+    <form id="formLogin">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input value="ejemplo@ejemplo.com" type="email" class="form-control" id="exampleInputEmail1"
+                aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input value="ejemplo@ejemplo" type="password" class="form-control" id="exampleInputPassword1"
+                placeholder="Password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnRegister">registrar</button>
+    </form>
+</div>
+
+<script>
+
+
+    $("#formLogin").submit(async (e) => {
+        e.preventDefault()
+
+        const form = e.target
+
+        let elements = Array.from(form).map(i => i.type == "email" || i.type == "password" ? i.value : false)
+        elements = elements.filter(i => i)
+
+        let length_Final = elements.length
+
+        let [email, password] = elements
+
+
+
+        try {
+
+            const { data } = await axios.post("/login", {
+                email, password
+            })
+
+            const user = data
+
+            alert("Usuario Logeado con éxito")
+            localStorage.setItem("user", JSON.stringify(user))
+            window.location = "/"
+
+        } catch (e) {
+            alert("ups...")
+            console.log(e)
+        }
+
+
+
+    })
+
+
+
+</script>
