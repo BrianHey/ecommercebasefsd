@@ -6,21 +6,11 @@ const Handlebars = require("handlebars");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const optionsForm = require("./optionsForm");
-const { v4: uuidv4 } = require("uuid");
 const firebase = require("firebase");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-var firebaseConfig = {
-  apiKey: "AIzaSyDmLEpV8JvRs90TDwXkqcZuBE0L56HiouQ",
-  authDomain: "clase05-10.firebaseapp.com",
-  databaseURL: "https://clase05-10.firebaseio.com",
-  projectId: "clase05-10",
-  storageBucket: "clase05-10.appspot.com",
-  messagingSenderId: "896690830399",
-  appId: "1:896690830399:web:d16b052ed3db66656acc8a",
-};
-
+const firebaseConfig = require("./firebaseconfig");
 firebase.initializeApp(firebaseConfig);
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,184 +51,41 @@ app.engine(
 );
 
 Handlebars.registerHelper("formatDate", (fecha) => {
-  let año = fecha.getFullYear();
-  let mes = fecha.getMonth() + 1;
-  let dia = fecha.getDate();
-  let hora = fecha.getHours();
-  let minutos = fecha.getMinutes();
-  return `${dia}/${mes}/${año}`;
+  let year = fecha.getFullYear();
+  let month = fecha.getMonth() + 1;
+  let day = fecha.getDate();
+  return `${day}/${month}/${year}`;
 });
 
-Handlebars.registerHelper("ifCond", function (v1, v2, options) {
-  console.log(v1, v2);
-  if (v1 === v2) {
-    return options.fn(this);
-  }
-});
+const { adminProducts } = require("./controllers/admin");
+const { catalogo, productSearch } = require("./controllers/main");
 
-app.get("/admin/productos", (req, res) => {
-  const { token } = req.query;
+const {
+  addProductREST,
+  updateProductREST,
+  newFile,
+  getProductsREST,
+  deleteProductREST,
+  getProductByIdREST,
+} = require("./controllers/pruducts_APIREST");
 
-  jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
-    if (!err) {
-      const promiseOptions = await Promise.all([
-        getProducts(),
-        getCategories(),
-      ]);
-      const [productos, categories] = promiseOptions;
-      const { sizes, colors, genders } = optionsForm;
-      productos.forEach((p) => {
-        p.category = categories.find((c) => c.id == p.category).name;
-      });
+app.get("/admin/productos", adminProducts);
 
-      res.render("Productos", {
-        products: JSON.stringify(productos),
-        productos,
-        sizesData: JSON.stringify(sizes),
-        sizes,
-        colorsData: JSON.stringify(colors),
-        colors,
-        gendersData: JSON.stringify(genders),
-        genders,
-        categoriesData: JSON.stringify(categories),
-        categories,
-      });
-    } else {
-      res.status(401).redirect("/");
-    }
-  });
-});
+app.post("/productos", addProductREST);
 
-app.post("/productos", async (req, res) => {
-  let productos = req.body;
+app.put("/productos/:id", updateProductREST);
 
-  try {
-    productos = Object.values(productos);
-    const result = await addProduct(productos);
-    res.status(201).send(result);
-  } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "500 Internal Error", message: e.message });
-  }
-});
+app.post("/files", newFile);
 
-app.put("/productos/:id", async (req, res) => {
-  const { id } = req.params;
-  let productos = req.body;
-  productos.id = id;
-  try {
-    productos = Object.values(productos);
-    const result = await updateProduct(productos);
-    res.status(201).send(result);
-  } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "500 Internal Error", message: e.message });
-  }
-});
+app.get("/productos", getProductsREST);
 
-app.post("/files", (req, res) => {
-  const { image } = req.files;
-  console.log(image);
-  const format = image.mimetype.split("/")[1];
-  const path = `assets/images/${uuidv4().slice(30)}.${format}`;
-  image.mv(path, (err) => {
-    err ? res.status(500).send("Something wrong...") : res.send(path);
-  });
-});
+app.delete("/productos/:id", deleteProductREST);
 
-app.get("/productos", async (req, res) => {
-  try {
-    const respuesta = await getProducts();
-    res.send(respuesta);
-  } catch (err) {
-    res.status(500).send({ message: err.message, error: "Error 500." });
-  }
-});
+app.get("/producto/:id", getProductByIdREST);
 
-app.delete("/productos/:id", async (req, res) => {
-  const { id } = req.params;
+app.get("/", catalogo);
 
-  const respuesta = await deleteProduct(id);
-  respuesta > 0
-    ? res.send({ status: "200", message: "Producto Eliminado" })
-    : res.status(500).send({
-        message: "No existe un registro con el id indicado",
-        error: "Error 500.",
-      });
-});
-
-app.get("/", async (req, res) => {
-  const { pag } = req.query;
-
-  let productos = await getProducts();
-  const pageQ = Math.ceil(productos.length / 8);
-
-  pag
-    ? (productos = productos.slice(pag * 8 - 8, pag * 8))
-    : (productos = productos.slice(0, 8));
-  res.render("Inicio", {
-    productos,
-    pageQ,
-    pag,
-  });
-});
-
-app.get("/producto/:id", async (req, res) => {
-  const { id } = req.params;
-  const promiseOptions = await Promise.all([getProducts(), getCategories()]);
-  const [productos, categories] = promiseOptions;
-  productos.forEach((p) => {
-    p.category = categories.find((c) => c.id == p.category).name;
-  });
-  let producto = productos.find((p) => p.id == id);
-  res.render("Details", { producto, productoData: JSON.stringify(producto) });
-});
-
-// app.get("/busqueda/:input", async (req, res) => {
-//   let productos = await getProducts();
-//   const { input } = req.params;
-//   let all_ProductsLabels = productos.map((p) => p.model);
-//   all_ProductsLabels = [...new Set(all_ProductsLabels)];
-//   productos = productos.filter((p) =>
-//     input.toLowerCase().includes(p.model.toLowerCase())
-//   );
-
-//   let filtros = Object.keys(productos[0]);
-
-//   res.render("Busqueda", {
-//     productos,
-//     all_ProductsLabels,
-//     filtros,
-//   });
-// });
-
-app.get("/busqueda/:filtro/:input", async (req, res) => {
-  let productos = await getProducts();
-  let filtros = Object.keys(productos[0]);
-
-  const { filtro, input } = req.params;
-  let all_ProductsLabels = productos.map((p) => p.model);
-  all_ProductsLabels = [...new Set(all_ProductsLabels)];
-
-  if (filtro == "todos") {
-    productos = productos.filter((p) => {
-      let valoresDeBusqueda = Object.values(p).map((v) =>
-        v.toString().toLocaleLowerCase()
-      );
-      return valoresDeBusqueda.includes(input.toLocaleLowerCase());
-    });
-  } else {
-    productos = productos.filter((p) => {
-      return p[filtro].toString().toLowerCase().includes(input.toLowerCase());
-    });
-  }
-
-  res.render("Busqueda", {
-    productos: productos.length >= 1 ? productos : null,
-    all_ProductsLabels,
-    filtros,
-  });
-});
+app.get("/busqueda/:filtro/:input", productSearch);
 
 app.get("/carrito", (req, res) => {
   res.render("Carrito");
@@ -310,7 +157,7 @@ app.post("/admin", async (req, res) => {
     jwt.sign(
       {
         data: resultado,
-        exp: Math.floor(Date.now() / 1000) + 60,
+        exp: Math.floor(Date.now() / 1000) + 600,
       },
       process.env.SECRET_KEY,
       (err, jwt) => {
