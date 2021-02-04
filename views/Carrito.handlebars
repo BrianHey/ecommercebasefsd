@@ -5,8 +5,14 @@
 
     </div>
     <h1>Total: <span id="total"></span></h1>
-    <button class="btn btn-success">Pagar</button>
+    <button class="btn btn-success" onclick="pagar()">Pagar</button>
 </div>
+
+<form class="d-none" id="myForm" name="myForm" action="https://webpay3gint.transbank.cl/webpayserver/initTransaction"
+    method="POST">
+    <input type="hidden" name="token_ws" id="tokenTBK" value="" />
+</form>
+
 
 <script>
 
@@ -47,7 +53,7 @@
         carrito = carrito.map(p => {
             if (p.id == id) {
                 p.cant--
-                p.total  = p.cant * p.price
+                p.total = p.cant * p.price
                 return p
             }
             return p
@@ -73,7 +79,7 @@
         carrito = carrito.map(p => {
             if (p.id == id) {
                 p.cant++
-                p.total  = p.cant * p.price
+                p.total = p.cant * p.price
 
                 return p
             }
@@ -90,5 +96,19 @@
     let total = carrito.map(p => p.total).reduce((a, b) => a + b)
     $("#total").html(total)
 
+
+    const pagar = async () => {
+        try {
+
+            const resultado = await axios.post("/transaction", { amount: total })
+            const { data } = resultado
+            const { token } = data
+            $("#tokenTBK").val(token)
+            console.log(token)
+            $("#myForm").submit()
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
 </script>
