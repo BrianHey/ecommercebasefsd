@@ -45,7 +45,7 @@ const adminLoginREST = async (req, res) => {
     jwt.sign(
       {
         data: resultado,
-        exp: Math.floor(Date.now() / 1000) + 600,
+        exp: Math.floor(Date.now() / 1000) + 6000,
       },
       process.env.SECRET_KEY,
       (err, jwt) => {
