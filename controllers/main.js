@@ -28,7 +28,7 @@ const productSearch = async (req, res) => {
       let valoresDeBusqueda = Object.values(p).map((v) =>
         v.toString().toLocaleLowerCase()
       );
-      return valoresDeBusqueda.includes(input.toLocaleLowerCase());
+      return valoresDeBusqueda.join('').includes(input.toLocaleLowerCase());
     });
   } else {
     productos = productos.filter((p) => {
