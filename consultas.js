@@ -4,11 +4,14 @@ const { Pool } = require("pg");
 // CREATE TABLE transactions (id SERIAL PRIMARY KEY, order_number VARCHAR(100), date DATE, amount FLOAT, card_detail INT, payment_type VARCHAR(5)) ;
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  password: "postgres",
-  database: "ecommerce",
+  user: "tplrzbxxgmngiz",
+  host: "ec2-52-6-178-202.compute-1.amazonaws.com",
+  password: "a164953b1510e4cbf039b6b75b81758d432b5ee8a0316cc3c9678c3bbb7e29f4",
+  database: "ddqoipu3q33op8",
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const getCategories = async () => {
