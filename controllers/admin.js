@@ -49,11 +49,16 @@ const adminLoginREST = async (req, res) => {
       },
       process.env.SECRET_KEY,
       (err, jwt) => {
-        console.log(jwt);
-        res.send(jwt);
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          console.log(jwt);
+          res.send(jwt);
+        }
       }
     );
   } catch (e) {
+    console.log(e);
     res.status(500).send({ error: "500 internal error", message: e.message });
   }
 };
