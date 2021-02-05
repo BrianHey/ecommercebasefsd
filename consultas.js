@@ -28,13 +28,14 @@ const addProduct = async (values) => {
   return result.rows;
 };
 
-const updateProduct = async (values) => {
+const updateProduct = async (values, id) => {
+  const urlImage = await pool.query("SELECT image FROM productos WHERE id =$1", [id]);
   const result = await pool.query(
     "UPDATE productos SET stock = $1, price = $2, image = $3, category =$4, description =$5, size =$6, gender =$7, color =$8, model =$9 WHERE id = $10 RETURNING *",
     values
   );
   console.log(result.rows[0]);
-  return result.rows;
+  return [urlImage.rows[0], result.rows];
 };
 
 const getProducts = async () => {
@@ -43,8 +44,9 @@ const getProducts = async () => {
 };
 
 const deleteProduct = async (id) => {
+  const urlImage = await pool.query("SELECT image FROM productos WHERE id =$1", [id]);
   const result = await pool.query("DELETE FROM productos WHERE id = $1", [id]);
-  return result.rowCount;
+  return ([urlImage.rows[0], result.rowCount]);
 };
 
 const adminLogin = async (values) => {

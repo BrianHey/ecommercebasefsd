@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const {
   addProduct,
   updateProduct,
@@ -19,6 +22,7 @@ const addProductREST = async (req, res) => {
     res.status(500).send({ error: "500 Internal Error", message: e.message });
   }
 };
+ 
 
 const updateProductREST = async (req, res) => {
   const { id } = req.params;
@@ -26,13 +30,19 @@ const updateProductREST = async (req, res) => {
   productos.id = id;
   try {
     productos = Object.values(productos);
-    const result = await updateProduct(productos);
-    res.status(201).send(result);
+    const result = await updateProduct(productos, id);
+    fs.unlink(path.join(__dirname, `../${result[0].image}`), (err) => {
+      err
+        ? res.send("Lo siento, este archivo no existe en servidor")
+        : res.status(201).send(result)  
+    })
+   
   } catch (e) {
     console.log(e);
     res.status(500).send({ error: "500 Internal Error", message: e.message });
   }
 };
+ 
 
 const newFile = (req, res) => {
   const { image } = req.files;
@@ -55,10 +65,13 @@ const getProductsREST = async (req, res) => {
 
 const deleteProductREST = async (req, res) => {
   const { id } = req.params;
-
   const respuesta = await deleteProduct(id);
-  respuesta > 0
-    ? res.send({ status: "200", message: "Producto Eliminado" })
+  respuesta[1] > 0
+    ? fs.unlink(path.join(__dirname, `../${respuesta[0].image}`), (err) => {
+        err
+          ? res.send("/Lo siento, este archivo no existe en servidor")
+          : res.send(`Imagen ${id} fue eliminada con éxito`);
+      })
     : res.status(500).send({
         message: "No existe un registro con el id indicado",
         error: "Error 500.",
