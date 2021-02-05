@@ -2,7 +2,12 @@ const { getProducts } = require("../consultas.js");
 
 const catalogo = async (req, res) => {
   const { pag } = req.query;
-  let productos = await getProducts();
+  let productos;
+  try {
+    productos = await getProducts();
+  } catch (e) {
+    console.log(e);
+  }
   const pageQ = Math.ceil(productos.length / 8);
 
   pag
