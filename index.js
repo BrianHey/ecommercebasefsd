@@ -21,7 +21,7 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT || 3000);
 
 app.use("/css", express.static(__dirname + "/assets/css"));
 app.use("/js", express.static(__dirname + "/assets/js"));

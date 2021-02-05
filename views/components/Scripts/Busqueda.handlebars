@@ -1,7 +1,7 @@
 <script>
     $("#buscador").click(() => {
         let busqueda = $("#busqueda").val()
-        let urlFinal = `https://ecommercefsd.herokuapp.com/busqueda/todos/${busqueda}`
-        window.location = urlFinal
+        let urlFinal = "busqueda/todos/" + busqueda
+        window.location = "/"+ urlFinal
     })
 </script>
