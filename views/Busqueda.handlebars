@@ -1,6 +1,6 @@
 <div id="Catalogo" class="p-5">
     <div class="container">
-        <h6>Buscador: <input list="browsers" id="buscador" type="text" class="form-control">
+        <h6>Buscador: <input list="browsers" id="buscadorView" type="text" class="form-control">
 
             <datalist id="browsers">
                 {{#each all_ProductsLabels}}
@@ -59,7 +59,7 @@
 <script>
 
     const buscar = () => {
-        let buscador = $("#buscador").val()
+        let buscador = $("#buscadorView").val()
         let filtro = $("#filtro").val()
         !buscador ? alert("Debe escribir algo en la busqueda") :
             window.location = `/busqueda/${filtro ? filtro : "todos"}/${buscador}`
