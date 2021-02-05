@@ -1,7 +1,8 @@
 <script>
     $("#buscador").click(() => {
         let busqueda = $("#busqueda").val()
-        let urlFinal = "busqueda/todos/" + busqueda
-        window.location = "/"+ urlFinal
+        let urlFinal = `http://localhost:3000/busqueda/todos/${busqueda}`
+        !busqueda ? alert ('Debe ingresar un valor para realizar la búsqueda'):
+        window.location = urlFinal
     })
 </script>
