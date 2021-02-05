@@ -75,7 +75,7 @@
         const decision = confirm("¿Estás seguro de querer eliminar este proucto?")
         if (decision) {
             try {
-                const consulta = await axios.delete(`http://localhost:3000/productos/${id}`)
+                const consulta = await axios.delete(`/productos/${id}`)
                 alert(consulta.data.message)
                 location.reload()
             } catch (e) {

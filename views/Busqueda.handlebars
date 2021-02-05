@@ -62,7 +62,7 @@
         let buscador = $("#buscador").val()
         let filtro = $("#filtro").val()
         !buscador ? alert("Debe escribir algo en la busqueda") :
-            window.location = `http://localhost:3000/busqueda/${filtro ? filtro : "todos"}/${buscador}`
+            window.location = `/busqueda/${filtro ? filtro : "todos"}/${buscador}`
     }
 
 </script>

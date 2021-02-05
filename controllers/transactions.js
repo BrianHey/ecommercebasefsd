@@ -16,7 +16,7 @@ const newTransaction = async (req, res) => {
       buy_order: "ordenCompra12345678",
       session_id: "sesion1234557545",
       amount,
-      return_url: "http://localhost:3000/success",
+      return_url: "/success",
     },
     method: "POST",
   }).then((data) => {
@@ -62,7 +62,7 @@ const successTransaction = (req, res) => {
         ];
 
         await addTransaction(trasnactionValues);
-        res.redirect(`http://localhost:3000/`);
+        res.redirect(`/`);
       } catch (e) {
         res
           .status(500)

@@ -59,7 +59,7 @@
             console.log(form)
             const urlImage = image ? (await axios.post("/files", formDataImage)).data : $(".modal-body #preview").attr("src").substr(1)
 
-            await axios[method](`http://localhost:3000/productos${method == "put" ? `/${productId}` : ''}`,
+            await axios[method](`/productos${method == "put" ? `/${productId}` : ''}`,
 
                 [stock, price, urlImage, category, description, size, gender, color, model]
             )
