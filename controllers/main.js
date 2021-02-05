@@ -1,4 +1,5 @@
 const { getProducts } = require("../consultas.js");
+
 const catalogo = async (req, res) => {
   const { pag } = req.query;
   let productos = await getProducts();
@@ -10,7 +11,7 @@ const catalogo = async (req, res) => {
   res.render("Inicio", {
     productos,
     pageQ,
-    pag,
+    pag: pag || 1,
   });
 };
 

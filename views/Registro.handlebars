@@ -31,7 +31,7 @@
 <script>
 
 
-    $("#formRegister").submit((e) => {
+    $("#formRegister").submit(async (e) => {
         e.preventDefault()
 
         const form = e.target
@@ -49,7 +49,7 @@
 
             try {
 
-                axios.post("/registro", {
+                await axios.post("/registro", {
                     email, nombre, password,
                 })
 

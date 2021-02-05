@@ -30,20 +30,6 @@
     </div>
 </nav>
 
-<script>
+{{> Scripts/Busqueda}}
 
-    $("#buscador").click(() => {
-        let busqueda = $("#busqueda").val()
-        let urlFinal = `http://localhost:3000/busqueda/todos/${busqueda}`
-        window.location = urlFinal
-    })
-
-    $(document).ready(() => {
-        const user = JSON.parse(localStorage.getItem("user"))
-        if (user) {
-
-            const { nombre } = user.data
-            $("#nombre").html(nombre)
-        }
-    })
-</script>
+{{> Scripts/Navbar}}

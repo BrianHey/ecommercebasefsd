@@ -1,0 +1,7 @@
+<script>
+    $("#buscador").click(() => {
+        let busqueda = $("#busqueda").val()
+        let urlFinal = `http://localhost:3000/busqueda/todos/${busqueda}`
+        window.location = urlFinal
+    })
+</script>

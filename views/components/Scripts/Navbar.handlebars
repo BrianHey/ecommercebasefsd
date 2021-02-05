@@ -1,0 +1,9 @@
+<script>
+    $(document).ready(() => {
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (user) {
+            const { nombre } = user.data
+            $("#nombre").html(nombre)
+        }
+    })
+</script>

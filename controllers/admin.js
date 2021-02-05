@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { getCategories, getProducts } = require("../consultas");
+const { getCategories, getProducts, adminLogin } = require("../consultas");
 const optionsForm = require("../optionsForm");
 
 const adminProducts = (req, res) => {
@@ -35,4 +35,26 @@ const adminProducts = (req, res) => {
   });
 };
 
-module.exports = { adminProducts };
+const adminLoginREST = async (req, res) => {
+  const { username, password } = req.body;
+
+  console.log(username);
+  console.log(password);
+  try {
+    const resultado = await adminLogin([username, password]);
+    jwt.sign(
+      {
+        data: resultado,
+        exp: Math.floor(Date.now() / 1000) + 600,
+      },
+      process.env.SECRET_KEY,
+      (err, jwt) => {
+        console.log(jwt);
+        res.send(jwt);
+      }
+    );
+  } catch (e) {
+    res.status(500).send({ error: "500 internal error", message: e.message });
+  }
+};
+module.exports = { adminProducts, adminLoginREST };

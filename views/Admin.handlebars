@@ -19,32 +19,21 @@
 
 <script>
 
-
     $("#btnLoginAdmin").click(async (e) => {
         const username = $("#username").val()
         const password = $("#passwordAdmin").val()
         try {
-
             const { data } = await axios.post("/admin", {
                 username, password
             })
-
             const token = data
             console.log(token)
-
             alert("Administrador Logeado con éxito")
             localStorage.setItem("token", token)
             window.location = `/admin/productos?token=${token}`
-
         } catch (e) {
             alert("ups...")
             console.log(e)
         }
-
-
-
     })
-
-
-
 </script>
